@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# Currency Hub — Forex Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack forex analytics dashboard built with **React** (frontend) and **FastAPI** (backend).
 
-## Available Scripts
+## Architecture
 
-In the project directory, you can run:
+```
+currency-converter-app/
+├── backend/                  # FastAPI Python backend
+│   ├── app/
+│   │   ├── main.py           # FastAPI app entry point
+│   │   ├── routes/
+│   │   │   ├── currencies.py # GET /api/currencies
+│   │   │   ├── conversion.py # GET /api/convert
+│   │   │   ├── trends.py     # GET /api/trends (with SMA, EMA, RSI, volatility)
+│   │   │   └── performance.py# GET /api/performance
+│   │   ├── services/
+│   │   │   ├── frankfurter.py # Frankfurter API client
+│   │   │   └── exchangerate.py# ExchangeRate API client
+│   │   └── utils/
+│   │       └── analytics.py  # SMA, EMA, RSI, volatility calculations
+│   ├── .env                  # API keys (not committed)
+│   └── requirements.txt
+├── frontend/                 # React frontend
+│   ├── src/
+│   │   ├── components/       # UI components
+│   │   ├── pages/            # Route pages
+│   │   └── utils/
+│   │       ├── api.js        # Backend API client
+│   │       └── analytics.js  # Client-side export utilities
+│   ├── .env                  # Backend URL config
+│   └── package.json
+└── README.md
+```
 
-### `npm start`
+## Quick Start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Backend (FastAPI)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # Mac/Linux
 
-### `npm test`
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Backend will be live at: `http://localhost:8000`
+API docs at: `http://localhost:8000/docs`
 
-### `npm run build`
+### 2. Frontend (React)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd frontend
+npm install
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Frontend will be live at: `http://localhost:3000`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## API Endpoints
 
-### `npm run eject`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/currencies` | List all available currencies |
+| GET | `/api/convert?from=USD&to=INR&amount=100` | Convert currency |
+| GET | `/api/trends?from=USD&to=INR&timeframe=1Y` | Historical data + SMA, EMA, RSI, volatility |
+| GET | `/api/performance?base=USD` | Global 7D/30D performance |
+| GET | `/docs` | Interactive Swagger API docs |
+| GET | `/health` | Health check |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Features
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Currency Converter** — Real-time conversion via ExchangeRate API
+- **Time-Series Analysis** — Historical charts with SMA, EMA overlays and configurable timeframes (1W–5Y)
+- **Statistical Indicators** — Annualized volatility, RSI, high/low/avg computed server-side
+- **Global Performance** — 7D and 30D change tracking for major currency pairs
+- **Data Export** — Download historical data as CSV or JSON
+- **Dark Theme** — Professional financial dashboard UI
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Tech Stack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19, Chart.js, Tailwind CSS, Framer Motion |
+| Backend | FastAPI, Python, httpx (async HTTP), Pydantic |
+| APIs | Frankfurter (historical), ExchangeRate API (conversion) |

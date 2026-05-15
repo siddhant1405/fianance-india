@@ -1,16 +1,16 @@
 // src/pages/LandingPage.jsx
 import React from 'react';
 import Header from '../components/Header';
-import GradientButton from '../components/Button'; // or Button
+import GradientButton from '../components/Button';
 import HeroSection from '../components/HeroSection';
-import Footer from '../components/Footer';  
+import Footer from '../components/Footer';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-black via-gray-900 to-gray-800">
+    <div className="min-h-screen flex flex-col bg-bg text-text-primary">
       <Header>
-        <GradientButton to="/convert">Convert Currency</GradientButton>
-        <GradientButton to="/about">About Us</GradientButton>
+        <GradientButton to="/convert">Dashboard</GradientButton>
+        <GradientButton to="/about">About</GradientButton>
       </Header>
       <main className="flex-grow flex flex-col">
         <HeroSection />
