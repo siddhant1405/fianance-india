@@ -1,11 +1,9 @@
 // src/components/Header.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../assets/LOGO.jpg';
 
 export default function Header({ children }) {
-  const location = useLocation();
-  
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-bg/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">

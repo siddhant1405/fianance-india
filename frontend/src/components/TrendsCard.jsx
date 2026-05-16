@@ -111,7 +111,7 @@ export default function TrendsCard({
     if (trendFrom && trendTo && frankfurterCurrencies.length > 0) {
       fetchHistoricalData();
     }
-  }, [fetchHistoricalData, frankfurterCurrencies.length]);
+  }, [fetchHistoricalData, frankfurterCurrencies.length, trendFrom, trendTo]);
 
   const handleExportCSV = () => {
     if (!rawData) return;
