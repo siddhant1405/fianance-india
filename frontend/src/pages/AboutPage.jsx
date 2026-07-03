@@ -1,114 +1,74 @@
 import React from 'react';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import Footer from '../components/Footer';
-import { FaChartLine, FaExchangeAlt, FaGlobeAmericas, FaDownload, FaDatabase, FaShieldAlt } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FiTrendingUp, FiCheckCircle, FiCpu, FiGithub } from 'react-icons/fi';
 
-const features = [
-  {
-    icon: <FaExchangeAlt className="text-accent" />,
-    title: "Instant Conversion",
-    desc: "Convert between 30+ currencies with real-time exchange rates from trusted financial APIs."
-  },
-  {
-    icon: <FaChartLine className="text-success" />,
-    title: "Time-Series Analysis",
-    desc: "Interactive charts with configurable timeframes from 1 week to 5 years of historical data."
-  },
-  {
-    icon: <FaGlobeAmericas className="text-warning" />,
-    title: "Global Performance",
-    desc: "Track 7-day and 30-day percentage changes across major world currencies."
-  },
-  {
-    icon: <FaDatabase className="text-purple-400" />,
-    title: "Statistical Indicators",
-    desc: "Built-in SMA, volatility, high/low analysis powered by custom JavaScript algorithms."
-  },
-  {
-    icon: <FaDownload className="text-cyan-400" />,
-    title: "Data Export",
-    desc: "Download historical data as CSV or JSON for use in Excel, Python, or any analytics tool."
-  },
-  {
-    icon: <FaShieldAlt className="text-emerald-400" />,
-    title: "Free & Open",
-    desc: "No credit card required. Built with free APIs and open-source technologies."
-  },
-];
-
-export default function AboutUsPage() {
+const AboutPage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-bg text-text-primary">
-      <Header>
-        <Button to="/convert">Dashboard</Button>
-        <Button to="/">Home</Button>
-      </Header>
+    <div className="max-w-3xl mx-auto px-6 py-12 space-y-12">
+      
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-gain flex items-center justify-center mx-auto mb-6 shadow-glow">
+          <FiTrendingUp className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-txt-primary mb-3">About FinPulse</h1>
+        <p className="text-txt-secondary text-lg max-w-xl mx-auto">
+          Intelligent market tracking and analysis for the modern Indian investor.
+        </p>
+      </motion.div>
 
-      <main className="flex-grow">
-        {/* Hero */}
-        <section className="relative py-20 px-6 text-center overflow-hidden grid-bg">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
-          <div className="max-w-3xl mx-auto relative z-10">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20 mb-6">
-              About the Project
-            </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
-              Professional Global Currency Rates<br />
-              <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">Analytics Dashboard</span>
-            </h1>
-            <p className="text-lg text-text-secondary leading-relaxed max-w-2xl mx-auto">
-              Currency Hub is a comprehensive global currency rates analytics platform built to showcase 
-              modern web development and data analytics skills. It combines real-time data 
-              visualization with statistical analysis tools used by financial professionals.
-            </p>
-          </div>
-        </section>
-
-        {/* Features Grid */}
-        <section className="py-16 px-6">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-2">Key Features</h2>
-            <p className="text-text-muted text-center mb-12">Everything you need for global currency rates analysis</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {features.map((feature, idx) => (
-                <div
-                  key={idx}
-                  className="glass-card rounded-xl p-6 hover:border-accent/30 transition-all duration-300 hover:-translate-y-1 group"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-bg-input flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 text-lg">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-base font-semibold text-text-primary mb-2">{feature.title}</h3>
-                  <p className="text-sm text-text-muted leading-relaxed">{feature.desc}</p>
-                </div>
-              ))}
+      {/* Philosophy */}
+      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-surface-1 border border-line rounded-2xl p-8 space-y-4">
+        <h2 className="text-xl font-bold text-txt-primary">Our Philosophy</h2>
+        <p className="text-sm text-txt-secondary leading-relaxed">
+          FinPulse was built with a single goal: to cut through the noise of financial markets. 
+          By combining real-time data, established technical indicators, and deterministic AI analysis, 
+          we provide clear, actionable insights without the typical clutter of traditional trading terminals.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <div className="flex items-start gap-3">
+            <FiCheckCircle className="w-5 h-5 text-gain shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-sm font-semibold text-txt-primary">Clean Design</h4>
+              <p className="text-xs text-txt-muted mt-1">Focus on what matters. No flashing banners or overwhelming tables.</p>
             </div>
           </div>
-        </section>
-
-        {/* Tech Stack */}
-        <section className="py-16 px-6 border-t border-border">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-2">Built With</h2>
-            <p className="text-text-muted mb-10">Modern technologies for performance and reliability</p>
-            
-            <div className="flex flex-wrap justify-center gap-3">
-              {["React 19", "Chart.js", "Tailwind CSS", "Framer Motion", "Frankfurter API", "ExchangeRate API", "JavaScript ES6+"].map((tech, idx) => (
-                <span 
-                  key={idx}
-                  className="px-4 py-2 rounded-lg bg-bg-elevated border border-border text-sm font-medium text-text-secondary hover:text-accent hover:border-accent/30 transition-all duration-200"
-                >
-                  {tech}
-                </span>
-              ))}
+          <div className="flex items-start gap-3">
+            <FiCheckCircle className="w-5 h-5 text-gain shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-sm font-semibold text-txt-primary">Data-Driven</h4>
+              <p className="text-xs text-txt-muted mt-1">All insights are grounded in hard mathematical indicators.</p>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </motion.section>
 
-      <Footer />
+      {/* AI Grounding */}
+      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-surface-1 border border-line rounded-2xl p-8 ai-border relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-ai/5 rounded-full blur-[50px] pointer-events-none" />
+        <div className="flex items-center gap-3 mb-4 relative z-10">
+          <div className="w-10 h-10 rounded-xl bg-ai/10 flex items-center justify-center">
+            <FiCpu className="w-5 h-5 text-ai" />
+          </div>
+          <h2 className="text-xl font-bold text-txt-primary">How our AI works</h2>
+        </div>
+        <p className="text-sm text-txt-secondary leading-relaxed relative z-10">
+          Our AI insights are powered by Groq's high-speed inference. Crucially, the AI is <strong className="text-txt-primary">strictly grounded</strong>. 
+          It does not hallucinate price targets or make random guesses. Before generating an insight, the backend computes the RSI, MACD, and Moving Averages, 
+          and feeds these exact numbers into the prompt. The resulting analysis is a direct interpretation of these technicals.
+        </p>
+      </motion.section>
+
+      {/* Footer */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-center flex flex-col items-center gap-4">
+        <p className="text-sm text-txt-muted">Built with React, Tailwind, Chart.js, and FastAPI.</p>
+        <a href="https://github.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 bg-surface-2 hover:bg-surface-3 border border-line rounded-xl text-sm font-medium text-txt-primary transition-colors">
+          <FiGithub className="w-4 h-4" /> View Source
+        </a>
+      </motion.div>
+
     </div>
   );
-}
+};
+
+export default AboutPage;
