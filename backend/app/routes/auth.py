@@ -40,6 +40,13 @@ class UserResponse(BaseModel):
     email: str
     name: str
 
+class UserUpdate(BaseModel):
+    name: str
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserRegister, db: AsyncSession = Depends(get_db)):
     stmt = select(User).where(User.email == user.email)
@@ -112,3 +119,24 @@ async def refresh_token(request: RefreshRequest):
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return UserResponse(id=current_user.id, email=current_user.email, name=current_user.name)
+
+@router.put("/me", response_model=UserResponse)
+async def update_users_me(update_data: UserUpdate, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    current_user.name = update_data.name
+    db.add(current_user)
+    await db.commit()
+    await db.refresh(current_user)
+    return UserResponse(id=current_user.id, email=current_user.email, name=current_user.name)
+
+@router.put("/password")
+async def update_password(update_data: PasswordUpdate, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    if not verify_password(update_data.current_password, current_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect current password"
+        )
+    
+    current_user.password_hash = get_password_hash(update_data.new_password)
+    db.add(current_user)
+    await db.commit()
+    return {"message": "Password updated successfully"}

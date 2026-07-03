@@ -1,5 +1,5 @@
 """
-Email delivery service for FinPulse daily watchlist PDF reports.
+Email delivery service for Finance India daily watchlist PDF reports.
 
 Uses aiosmtplib for async Gmail SMTP delivery with PDF attachment.
 Credentials are loaded from environment variables — never hardcoded.
@@ -69,7 +69,7 @@ def _build_email_html(user_name: str, report_date: str, asset_count: int) -> str
                         <td style="background:linear-gradient(135deg,#3b82f6,#2563eb); padding:30px; 
                                    border-radius:12px 12px 0 0; text-align:center;">
                             <h1 style="margin:0; color:#ffffff; font-size:28px; font-weight:700;">
-                                FinPulse
+                                Finance India
                             </h1>
                             <p style="margin:8px 0 0; color:rgba(255,255,255,0.8); font-size:13px;">
                                 AI-Powered Market Intelligence
@@ -101,7 +101,7 @@ def _build_email_html(user_name: str, report_date: str, asset_count: int) -> str
                             </table>
                             
                             <p style="color:#64748B; font-size:12px; margin:24px 0 0; line-height:1.5;">
-                                This report was generated automatically by FinPulse. 
+                                This report was generated automatically by Finance India. 
                                 You can adjust your delivery schedule or disable reports from your dashboard settings.
                             </p>
                         </td>
@@ -111,7 +111,7 @@ def _build_email_html(user_name: str, report_date: str, asset_count: int) -> str
                     <tr>
                         <td style="padding:20px 30px; border-top:1px solid #1E2533; text-align:center;">
                             <p style="color:#64748B; font-size:11px; margin:0;">
-                                FinPulse &copy; {datetime.now().year} &bull; AI-Powered Financial Analytics
+                                Finance India &copy; {datetime.now().year} &bull; AI-Powered Financial Analytics
                             </p>
                         </td>
                     </tr>
@@ -152,9 +152,9 @@ async def send_report_email(
 
     # Build MIME message
     msg = MIMEMultipart("mixed")
-    msg["From"] = f"FinPulse Reports <{gmail_user}>"
+    msg["From"] = f"Finance India Reports <{gmail_user}>"
     msg["To"] = to_email
-    msg["Subject"] = f"FinPulse Daily Report — {report_date}"
+    msg["Subject"] = f"Finance India Daily Report — {report_date}"
 
     # Estimate asset count from PDF size (rough heuristic for email body)
     # A more accurate count would be passed in, but this keeps the interface simple
@@ -165,7 +165,7 @@ async def send_report_email(
     msg.attach(MIMEText(html_body, "html", "utf-8"))
 
     # PDF attachment
-    filename = f"FinPulse_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+    filename = f"FinanceIndia_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
     pdf_part = MIMEApplication(pdf_bytes, _subtype="pdf")
     pdf_part.add_header("Content-Disposition", "attachment", filename=filename)
     msg.attach(pdf_part)

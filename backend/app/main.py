@@ -14,8 +14,8 @@ from app.routes import auth, assets, market, watchlist, conversion, currencies, 
 load_dotenv()
 
 app = FastAPI(
-    title="FinPulse API",
-    description="Backend API for FinPulse — AI-powered multi-asset Indian financial intelligence platform. Provides real-time conversion, historical trends with statistical indicators, global currency performance tracking, and daily watchlist PDF reports.",
+    title="Finance India API",
+    description="Backend API for Finance India — AI-powered multi-asset Indian financial intelligence platform. Provides real-time conversion, historical trends with statistical indicators, global currency performance tracking, and daily watchlist PDF reports.",
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -133,7 +133,7 @@ async def shutdown_event():
 @app.get("/", tags=["health"])
 async def root():
     return {
-        "service": "FinPulse API",
+        "service": "Finance India API",
         "version": "2.0.0",
         "status": "healthy",
         "docs": "/docs",

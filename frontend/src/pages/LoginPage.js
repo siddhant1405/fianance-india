@@ -45,7 +45,7 @@ const LoginPage = () => {
             </div>
           </Link>
           <h2 className="text-2xl font-bold text-txt-primary">Welcome back</h2>
-          <p className="text-txt-muted mt-1.5 text-sm">Log in to your FinPulse account</p>
+          <p className="text-txt-muted mt-1.5 text-sm">Log in to your Finance India account</p>
         </div>
 
         {error && (

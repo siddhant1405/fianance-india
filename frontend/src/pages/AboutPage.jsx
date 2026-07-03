@@ -11,7 +11,7 @@ const AboutPage = () => {
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-gain flex items-center justify-center mx-auto mb-6 shadow-glow">
           <FiTrendingUp className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-txt-primary mb-3">About FinPulse</h1>
+        <h1 className="text-3xl font-bold text-txt-primary mb-3">About Finance India</h1>
         <p className="text-txt-secondary text-lg max-w-xl mx-auto">
           Intelligent market tracking and analysis for the modern Indian investor.
         </p>
@@ -21,7 +21,7 @@ const AboutPage = () => {
       <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-surface-1 border border-line rounded-2xl p-8 space-y-4">
         <h2 className="text-xl font-bold text-txt-primary">Our Philosophy</h2>
         <p className="text-sm text-txt-secondary leading-relaxed">
-          FinPulse was built with a single goal: to cut through the noise of financial markets. 
+          Finance India was built with a single goal: to cut through the noise of financial markets. 
           By combining real-time data, established technical indicators, and deterministic AI analysis, 
           we provide clear, actionable insights without the typical clutter of traditional trading terminals.
         </p>

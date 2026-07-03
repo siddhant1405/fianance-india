@@ -76,7 +76,7 @@ Backend: `http://localhost:8000`
 
 ### Render (backend)
 
-Use the included [render.yaml](/C:/Users/manoj/Desktop/code/projects/forex-analytics-dashboard/render.yaml) or create a Render Web Service that points at the `backend` directory and uses Docker.
+Use the included [render.yaml](/C:/Users/manoj/Desktop/code/projects/finance-india/render.yaml) or create a Render Web Service that points at the `backend` directory and uses Docker.
 
 Set these environment variables in Render:
 
@@ -103,7 +103,7 @@ Set this environment variable in Netlify:
 
 - `REACT_APP_API_URL`: your Render backend URL, for example `https://your-render-service.onrender.com`
 
-The included [netlify.toml](/C:/Users/manoj/Desktop/code/projects/forex-analytics-dashboard/netlify.toml) adds an SPA redirect so React Router routes like `/convert` and `/about` work on refresh.
+The included [netlify.toml](/C:/Users/manoj/Desktop/code/projects/finance-india/netlify.toml) adds an SPA redirect so React Router routes like `/convert` and `/about` work on refresh.
 
 ## API Endpoints
 

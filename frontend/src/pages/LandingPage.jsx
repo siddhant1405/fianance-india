@@ -72,7 +72,7 @@ const LandingPage = () => {
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-gain flex items-center justify-center">
               <FiTrendingUp className="w-4 h-4 text-white" />
             </div>
-            <span className="text-base font-bold tracking-tight">FinPulse</span>
+            <span className="text-base font-bold tracking-tight">Finance India</span>
           </Link>
           <div className="flex items-center gap-2">
             <button
@@ -262,7 +262,7 @@ const LandingPage = () => {
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to get started?</h2>
           <p className="text-txt-muted text-sm mb-8">
-            Join FinPulse to track your markets with AI-powered insights — completely free.
+            Join Finance India to track your markets with AI-powered insights — completely free.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link
@@ -279,7 +279,7 @@ const LandingPage = () => {
       <footer className="border-t border-line py-6 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-txt-muted">
-            &copy; {new Date().getFullYear()} FinPulse &middot; AI-powered financial intelligence
+            &copy; {new Date().getFullYear()} Finance India &middot; AI-powered financial intelligence
           </p>
           <div className="flex items-center gap-4">
             <Link to="/about" className="text-xs text-txt-muted hover:text-txt-secondary transition-colors">About</Link>

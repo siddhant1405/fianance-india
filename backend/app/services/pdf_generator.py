@@ -1,5 +1,5 @@
 """
-PDF report generator for FinPulse daily watchlist reports.
+PDF report generator for Finance India daily watchlist reports.
 
 Uses ReportLab for PDF layout and Matplotlib for embedded sparkline charts.
 All rendering is done in-memory (BytesIO) — no disk I/O required.
@@ -108,7 +108,7 @@ def _build_styles() -> Dict[str, ParagraphStyle]:
     base = getSampleStyleSheet()
     return {
         "title": ParagraphStyle(
-            "FinPulseTitle",
+            "Finance IndiaTitle",
             parent=base["Title"],
             fontName="Helvetica-Bold",
             fontSize=22,
@@ -117,7 +117,7 @@ def _build_styles() -> Dict[str, ParagraphStyle]:
             spaceAfter=4 * mm,
         ),
         "subtitle": ParagraphStyle(
-            "FinPulseSubtitle",
+            "Finance IndiaSubtitle",
             parent=base["Normal"],
             fontName="Helvetica",
             fontSize=10,
@@ -142,7 +142,7 @@ def _build_styles() -> Dict[str, ParagraphStyle]:
             textColor=WHITE,
         ),
         "body": ParagraphStyle(
-            "FinPulseBody",
+            "Finance IndiaBody",
             parent=base["Normal"],
             fontName="Helvetica",
             fontSize=9,
@@ -150,7 +150,7 @@ def _build_styles() -> Dict[str, ParagraphStyle]:
             leading=13,
         ),
         "body_muted": ParagraphStyle(
-            "FinPulseBodyMuted",
+            "Finance IndiaBodyMuted",
             parent=base["Normal"],
             fontName="Helvetica",
             fontSize=8,
@@ -204,7 +204,7 @@ def _draw_page_background(canvas, doc):
     canvas.drawCentredString(
         A4[0] / 2,
         1 * cm,
-        f"FinPulse Daily Report  •  Page {doc.page}  •  Generated {datetime.now().strftime('%d %b %Y, %I:%M %p IST')}",
+        f"Finance India Daily Report  •  Page {doc.page}  •  Generated {datetime.now().strftime('%d %b %Y, %I:%M %p IST')}",
     )
     canvas.restoreState()
 
@@ -328,7 +328,7 @@ def generate_watchlist_report(
     market_overview: Optional[Dict[str, Any]] = None,
 ) -> bytes:
     """
-    Generate a complete FinPulse daily watchlist PDF report.
+    Generate a complete Finance India daily watchlist PDF report.
 
     Args:
         user_name: Display name of the user.
@@ -353,8 +353,8 @@ def generate_watchlist_report(
         rightMargin=2 * cm,
         topMargin=2 * cm,
         bottomMargin=2.5 * cm,
-        title=f"FinPulse Report — {datetime.now().strftime('%d %b %Y')}",
-        author="FinPulse",
+        title=f"Finance India Report — {datetime.now().strftime('%d %b %Y')}",
+        author="Finance India",
     )
 
     styles = _build_styles()
@@ -362,7 +362,7 @@ def generate_watchlist_report(
 
     # ── Title Page Content ────────────────────────────────────────────────────
     elements.append(Spacer(1, 3 * cm))
-    elements.append(Paragraph("FinPulse", styles["title"]))
+    elements.append(Paragraph("Finance India", styles["title"]))
     elements.append(
         Paragraph("AI-Powered Multi-Asset Market Intelligence", styles["subtitle"])
     )

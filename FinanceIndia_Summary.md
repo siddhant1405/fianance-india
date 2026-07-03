@@ -1,10 +1,10 @@
-# FinPulse — AI-Powered Multi-Asset Indian Financial Intelligence Platform
+# Finance India — AI-Powered Multi-Asset Indian Financial Intelligence Platform
 
 ---
 
 ## Project Summary
 
-FinPulse is a full-stack financial analytics platform that provides real-time market intelligence across multiple asset classes relevant to the Indian market. Built with React and FastAPI, it combines technical indicator computation, scheduled PDF report delivery, and AI-generated insights powered by Groq (Llama 3.3 70B).
+Finance India is a full-stack financial analytics platform that provides real-time market intelligence across multiple asset classes relevant to the Indian market. Built with React and FastAPI, it combines technical indicator computation, scheduled PDF report delivery, and AI-generated insights powered by Groq (Llama 3.3 70B).
 
 The platform evolves from an existing currency converter dashboard into a comprehensive financial intelligence tool covering forex, Indian equities, market indices, and commodities — with PostgreSQL persistence, Redis caching, JWT authentication, and scheduled daily watchlist reports via email.
 
@@ -101,14 +101,14 @@ Focus on what indicators suggest. Do NOT give trading advice.
 
 | Report Section | Content |
 |---|---|
-| **Header** | FinPulse branding, report date, user name |
+| **Header** | Finance India branding, report date, user name |
 | **Asset Card** (per asset) | Current price, daily change (₹ and %), 7-day sparkline chart |
 | **Technical Snapshot** (per asset) | RSI(14), SMA(50), EMA(50), Volatility %, MACD signal, Bollinger Band position |
 | **AI Market Summary** | Single Groq-generated cross-asset analysis grounded in all watchlist indicators |
 | **Market Overview** | Top movers, index performance, forex/commodity snapshot |
 
 - PDF generated server-side using ReportLab with embedded Matplotlib sparkline charts
-- Email delivery via Gmail SMTP with PDF attachment (`FinPulse_Report_YYYY-MM-DD.pdf`)
+- Email delivery via Gmail SMTP with PDF attachment (`FinanceIndia_Report_YYYY-MM-DD.pdf`)
 - User configurable: delivery time (30-min increments, 6:00–22:00 IST), enable/disable toggle
 - Preview and on-demand "Send Now" options available via API and UI
 - Weekday-only delivery (Monday–Friday, skips weekends when Indian markets are closed)
@@ -279,4 +279,4 @@ CORS_ALLOW_ORIGINS    Allowed frontend origins
 ---
 
 *Document updated: July 2026*
-*Repository: forex-analytics-dashboard*
+*Repository: finance-india*

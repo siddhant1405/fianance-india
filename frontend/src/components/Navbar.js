@@ -56,7 +56,7 @@ const Navbar = () => {
                 <FiTrendingUp className="w-4.5 h-4.5 text-white" />
               </div>
               <span className="text-lg font-bold text-txt-primary tracking-tight">
-                FinPulse
+                Finance India
               </span>
             </Link>
 

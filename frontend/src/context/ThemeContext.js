@@ -4,7 +4,7 @@ const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('finpulse-theme') || 'dark';
+    return localStorage.getItem('finance-india-theme') || 'dark';
   });
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove('light');
     }
-    localStorage.setItem('finpulse-theme', theme);
+    localStorage.setItem('finance-india-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

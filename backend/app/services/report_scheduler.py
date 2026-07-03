@@ -1,5 +1,5 @@
 """
-Report scheduler service for FinPulse.
+Report scheduler service for Finance India.
 
 Manages per-user APScheduler cron jobs that generate and email
 daily watchlist PDF reports on weekdays at each user's chosen time.

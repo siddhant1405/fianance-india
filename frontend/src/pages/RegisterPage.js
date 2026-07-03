@@ -45,7 +45,7 @@ const RegisterPage = () => {
             </div>
           </Link>
           <h2 className="text-2xl font-bold text-txt-primary">Create an account</h2>
-          <p className="text-txt-muted mt-1.5 text-sm">Join FinPulse to track the markets</p>
+          <p className="text-txt-muted mt-1.5 text-sm">Join Finance India to track the markets</p>
         </div>
 
         {error && (

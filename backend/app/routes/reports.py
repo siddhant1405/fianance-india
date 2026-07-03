@@ -245,7 +245,7 @@ async def preview_report(
         logger.error("Report preview failed for user %d: %s", user.id, e, exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to generate report preview")
 
-    filename = f"FinPulse_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+    filename = f"FinanceIndia_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
 
     return Response(
         content=pdf_bytes,

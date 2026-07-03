@@ -1,5 +1,5 @@
 /**
- * API client for the FinPulse FastAPI backend.
+ * API client for the Finance India FastAPI backend.
  */
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8001";
