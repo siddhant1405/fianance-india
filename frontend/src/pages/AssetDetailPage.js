@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { FiChevronLeft, FiHeart, FiTrendingUp, FiTrendingDown, FiActivity } from 'react-icons/fi';
 import { Line } from 'react-chartjs-2';
 import {
