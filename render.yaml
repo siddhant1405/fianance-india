@@ -28,7 +28,7 @@ services:
           name: finpulse-redis
           property: connectionString
       - key: CORS_ALLOW_ORIGINS
-        sync: false
+        value: "https://6a490bc23aae2f000841cc7b--finance-india1.netlify.app"
       - key: EXCHANGE_API_KEY
         sync: false
       - key: GROQ_API_KEY
@@ -37,3 +37,10 @@ services:
         sync: false
       - key: GMAIL_APP_PASSWORD
         sync: false
+
+  - type: cron
+    name: keep-backend-awake
+    runtime: python
+    plan: free
+    schedule: "*/14 * * * *"
+    command: python -c "import urllib.request; urllib.request.urlopen('http://forex-analytics-backend:8000/health')"
