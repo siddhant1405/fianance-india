@@ -1,4 +1,14 @@
+databases:
+  - name: finpulse-db
+    databaseName: finpulse
+    user: finpulse
+    plan: free
+
 services:
+  - type: redis
+    name: finpulse-redis
+    plan: free
+
   - type: web
     name: forex-analytics-backend
     runtime: docker
@@ -6,8 +16,23 @@ services:
     plan: free
     envVars:
       - key: PORT
-        value: 8000
+        value: "8000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: finpulse-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: finpulse-redis
+          property: connectionString
       - key: CORS_ALLOW_ORIGINS
         sync: false
       - key: EXCHANGE_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_APP_PASSWORD
         sync: false
