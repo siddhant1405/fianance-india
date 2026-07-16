@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FiActivity, FiRefreshCw } from 'react-icons/fi';
+import AIInsightText from './AIInsightText';
 
 const AIInsightPanel = ({ insight, loading = false, onRegenerate, className = '' }) => {
   if (loading) {
@@ -49,9 +50,7 @@ const AIInsightPanel = ({ insight, loading = false, onRegenerate, className = ''
         )}
       </div>
 
-      <p className="text-sm text-txt-secondary leading-relaxed relative z-10">
-        {insight || 'No AI insight available for this asset.'}
-      </p>
+      <AIInsightText text={insight} />
     </motion.div>
   );
 };

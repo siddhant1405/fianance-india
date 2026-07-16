@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiLock, FiLogOut, FiEdit2, FiShield, FiCheckCircle } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiShield, FiCheckCircle, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useWatchlist } from '../context/WatchlistContext';
 import { useToast } from '../context/ToastContext';
@@ -8,7 +8,7 @@ import { apiFetch } from '../utils/api';
 import ReportSettingsCard from '../components/ReportSettingsCard';
 
 const ProfilePage = () => {
-  const { user, logout, updateUser } = useAuth();
+  const { user, updateUser } = useAuth();
   const { watchlist } = useWatchlist();
   const { showToast } = useToast();
   
@@ -20,6 +20,7 @@ const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
   const initials = user?.name
     ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
@@ -97,11 +98,6 @@ const ProfilePage = () => {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-gain flex items-center justify-center text-xl font-bold text-white shadow-glow">
                 {initials}
               </div>
-              <div>
-                <button className="text-sm font-medium text-accent hover:text-accent-hover transition-colors flex items-center gap-1.5 disabled:opacity-50" disabled>
-                  <FiEdit2 className="w-3.5 h-3.5" /> Change Avatar
-                </button>
-              </div>
             </div>
 
             <div className="space-y-4">
@@ -156,12 +152,20 @@ const ProfilePage = () => {
                 <div className="relative">
                   <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-txt-muted" />
                   <input 
-                    type="password" 
+                    type={showCurrentPassword ? "text" : "password"}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter current password" 
-                    className="w-full pl-10 pr-4 py-2.5 bg-surface-2 border border-line rounded-xl text-sm text-txt-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" 
+                    className="w-full pl-10 pr-10 py-2.5 bg-surface-2 border border-line rounded-xl text-sm text-txt-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" 
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-txt-muted hover:text-txt-primary transition-colors"
+                    aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+                  >
+                    {showCurrentPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -228,20 +232,6 @@ const ProfilePage = () => {
             <a href="/watchlist" className="text-sm font-medium text-accent hover:text-accent-hover transition-colors">
               Manage Watchlist &rarr;
             </a>
-          </motion.div>
-
-          {/* Danger Zone */}
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="bg-surface-1 border border-line rounded-2xl p-6"
-          >
-            <h3 className="text-base font-semibold text-loss mb-4">Danger Zone</h3>
-            <button
-              onClick={logout}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-loss/10 hover:bg-loss/20 border border-loss/20 text-loss text-sm font-medium rounded-xl transition-colors"
-            >
-              <FiLogOut className="w-4 h-4" /> Sign Out
-            </button>
           </motion.div>
 
         </div>

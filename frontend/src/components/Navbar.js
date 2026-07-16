@@ -5,12 +5,13 @@ import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiTrendingUp, FiGrid, FiHeart, FiInfo, FiSun, FiMoon,
-  FiUser, FiLogOut, FiChevronDown,
+  FiUser, FiLogOut, FiChevronDown, FiBookOpen,
 } from 'react-icons/fi';
 
 const NAV_ITEMS = [
   { name: 'Dashboard', path: '/dashboard', icon: FiGrid },
   { name: 'Watchlist',  path: '/watchlist',  icon: FiHeart },
+  { name: 'Learn',      path: '/learn',      icon: FiBookOpen },
   { name: 'About',      path: '/about',      icon: FiInfo },
 ];
 

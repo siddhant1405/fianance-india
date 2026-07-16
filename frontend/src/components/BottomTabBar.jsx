@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiGrid, FiHeart, FiUser, FiInfo } from 'react-icons/fi';
+import { FiGrid, FiHeart, FiUser, FiInfo, FiBookOpen } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const TABS = [
   { name: 'Dashboard', path: '/dashboard', icon: FiGrid },
   { name: 'Watchlist',  path: '/watchlist',  icon: FiHeart },
+  { name: 'Learn',      path: '/learn',      icon: FiBookOpen },
   { name: 'Profile',    path: '/profile',    icon: FiUser },
   { name: 'About',      path: '/about',      icon: FiInfo },
 ];

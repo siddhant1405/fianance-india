@@ -16,6 +16,7 @@ import AssetDetailPage from './pages/AssetDetailPage';
 import WatchlistPage from './pages/WatchlistPage';
 import ProfilePage from './pages/ProfilePage';
 import AboutPage from './pages/AboutPage';
+import LearnPage from './pages/LearnPage';
 
 const AppLayout = ({ children }) => (
   <div className="min-h-screen bg-surface-0 pb-16 md:pb-0 pt-0 md:pt-16">
@@ -36,6 +37,7 @@ function App() {
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/about" element={<AppLayout><AboutPage /></AppLayout>} />
+                <Route path="/learn" element={<AppLayout><LearnPage /></AppLayout>} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 

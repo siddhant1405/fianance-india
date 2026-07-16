@@ -11,6 +11,7 @@ import { useWatchlist } from '../context/WatchlistContext';
 import TimeframeSelector, { TIMEFRAMES } from '../components/TimeframeSelector';
 import IndicatorToggle, { INDICATORS } from '../components/IndicatorToggle';
 import AIInsightPanel from '../components/AIInsightPanel';
+import IndicatorInfoPopover from '../components/IndicatorInfoPopover';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip);
 
@@ -25,6 +26,7 @@ const AssetDetailPage = () => {
   
   const [timeframe, setTimeframe] = useState('6mo');
   const [activeIndicators, setActiveIndicators] = useState([]);
+  const [activePopover, setActivePopover] = useState(null);
   
   const [aiInsight, setAiInsight] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -222,13 +224,23 @@ const AssetDetailPage = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'RSI (14)', val: techStats.rsi, color: techStats.rsi > 70 ? 'text-loss' : techStats.rsi < 30 ? 'text-gain' : 'text-txt-primary' },
-              { label: 'SMA (50)', val: '₹' + techStats.sma50 },
-              { label: 'MACD', val: techStats.macd, color: techStats.macd > 0 ? 'text-gain' : 'text-loss' },
-              { label: 'Volatility', val: techStats.volatility },
+              { key: 'rsi', label: 'RSI (14)', val: techStats.rsi, color: techStats.rsi > 70 ? 'text-loss' : techStats.rsi < 30 ? 'text-gain' : 'text-txt-primary' },
+              { key: 'sma', label: 'SMA (50)', val: '₹' + techStats.sma50 },
+              { key: 'macd', label: 'MACD', val: techStats.macd, color: techStats.macd > 0 ? 'text-gain' : 'text-loss' },
+              { key: 'volatility', label: 'Volatility', val: techStats.volatility },
             ].map((stat, i) => (
-              <div key={i} className="bg-surface-1 border border-line rounded-xl p-4 flex flex-col justify-center">
-                <span className="text-[11px] font-medium text-txt-muted uppercase tracking-wider mb-1.5">{stat.label}</span>
+              <div key={i} className="bg-surface-1 border border-line rounded-xl p-4 flex flex-col justify-center relative">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <span className="text-[11px] font-medium text-txt-muted uppercase tracking-wider">{stat.label}</span>
+                  <button
+                    type="button"
+                    onClick={() => setActivePopover(stat.key)}
+                    className="ml-auto inline-flex h-4 w-4 items-center justify-center rounded-full text-[10px] leading-none text-txt-muted hover:text-txt-primary transition-colors"
+                    aria-label={`Info about ${stat.label}`}
+                  >
+                    ⓘ
+                  </button>
+                </div>
                 <span className={`text-base font-bold font-mono-num ${stat.color || 'text-txt-primary'}`}>{stat.val}</span>
               </div>
             ))}
@@ -254,6 +266,12 @@ const AssetDetailPage = () => {
         </div>
 
       </div>
+
+      <IndicatorInfoPopover
+        indicatorKey={activePopover}
+        isOpen={!!activePopover}
+        onClose={() => setActivePopover(null)}
+      />
     </div>
   );
 };

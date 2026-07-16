@@ -20,7 +20,7 @@ const RegisterPage = () => {
 
     try {
       await register(name, email, password);
-      navigate('/dashboard');
+      navigate('/watchlist');
     } catch (err) {
       setError(err.message || 'Failed to register');
     } finally {
