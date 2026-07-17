@@ -1,45 +1,44 @@
 """
 Email delivery service for Finance India daily watchlist PDF reports.
 
-Uses aiosmtplib for async Gmail SMTP delivery with PDF attachment.
+Uses Resend's HTTP API (via httpx) for reliable email delivery on Render.
+SMTP port 587 is blocked on Render's free tier; this approach uses HTTPS
+(port 443) which is always allowed.
+
 Credentials are loaded from environment variables — never hardcoded.
 """
 
 import logging
 import os
 from datetime import datetime
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import Optional
 
-import aiosmtplib
+import httpx
 
 logger = logging.getLogger(__name__)
 
-# ── SMTP Configuration ───────────────────────────────────────────────────────
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 587
+# ── Resend API Configuration ─────────────────────────────────────────────────
+RESEND_API_URL = "https://api.resend.com/emails"
 MAX_RETRIES = 2
 
 
-def _get_smtp_credentials() -> tuple[str, str]:
+def _get_resend_credentials() -> tuple[str, str]:
     """
-    Load SMTP credentials from environment variables.
+    Load Resend API key and sender address from environment variables.
 
     Raises:
         ValueError: If required env vars are not set.
     """
-    gmail_user = os.getenv("GMAIL_USER")
-    gmail_password = os.getenv("GMAIL_APP_PASSWORD")
+    api_key = os.getenv("RESEND_API_KEY")
+    from_email = os.getenv("RESEND_FROM_EMAIL", "Finance India <reports@resend.dev>")
 
-    if not gmail_user or not gmail_password:
+    if not api_key:
         raise ValueError(
-            "GMAIL_USER and GMAIL_APP_PASSWORD must be set in environment variables. "
-            "Generate a Gmail App Password at https://myaccount.google.com/apppasswords"
+            "RESEND_API_KEY must be set in environment variables. "
+            "Sign up at https://resend.com and create an API key."
         )
 
-    return gmail_user, gmail_password
+    return api_key, from_email
 
 
 def _build_email_html(user_name: str, report_date: str, asset_count: int) -> str:
@@ -48,9 +47,8 @@ def _build_email_html(user_name: str, report_date: str, asset_count: int) -> str
 
     Uses inline styles for email client compatibility. Does not use
     dangerouslySetInnerHTML or any user-controlled content in raw HTML —
-    all dynamic values are simple strings (name, date, count).
+    all dynamic values are plain strings (name, date, count).
     """
-    # All dynamic content is plain text — no HTML injection risk
     return f"""<!DOCTYPE html>
 <html>
 <head>
@@ -130,7 +128,10 @@ async def send_report_email(
     report_date: Optional[str] = None,
 ) -> bool:
     """
-    Send the daily watchlist report PDF via Gmail SMTP.
+    Send the daily watchlist report PDF via Resend's HTTP API.
+
+    Uses HTTPS (port 443) instead of SMTP (port 587), which is blocked
+    on Render's free tier.
 
     Args:
         to_email: Recipient email address.
@@ -145,50 +146,68 @@ async def send_report_email(
         report_date = datetime.now().strftime("%d %B %Y")
 
     try:
-        gmail_user, gmail_password = _get_smtp_credentials()
+        api_key, from_email = _get_resend_credentials()
     except ValueError:
-        logger.error("SMTP credentials not configured — cannot send report email")
+        logger.error("Resend credentials not configured — cannot send report email")
         return False
 
-    # Build MIME message
-    msg = MIMEMultipart("mixed")
-    msg["From"] = f"Finance India Reports <{gmail_user}>"
-    msg["To"] = to_email
-    msg["Subject"] = f"Finance India Daily Report — {report_date}"
-
     # Estimate asset count from PDF size (rough heuristic for email body)
-    # A more accurate count would be passed in, but this keeps the interface simple
     asset_count_estimate = max(1, len(pdf_bytes) // 15000)
 
-    # HTML body
     html_body = _build_email_html(user_name, report_date, asset_count_estimate)
-    msg.attach(MIMEText(html_body, "html", "utf-8"))
 
-    # PDF attachment
     filename = f"FinanceIndia_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
-    pdf_part = MIMEApplication(pdf_bytes, _subtype="pdf")
-    pdf_part.add_header("Content-Disposition", "attachment", filename=filename)
-    msg.attach(pdf_part)
 
-    # Send with retry logic
+    # Resend API payload — attachments are base64-encoded
+    import base64
+    payload = {
+        "from": from_email,
+        "to": [to_email],
+        "subject": f"Finance India Daily Report — {report_date}",
+        "html": html_body,
+        "attachments": [
+            {
+                "filename": filename,
+                "content": base64.b64encode(pdf_bytes).decode("utf-8"),
+            }
+        ],
+    }
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            await aiosmtplib.send(
-                msg,
-                hostname=SMTP_HOST,
-                port=SMTP_PORT,
-                start_tls=True,
-                username=gmail_user,
-                password=gmail_password,
-                timeout=30,
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    RESEND_API_URL,
+                    json=payload,
+                    headers=headers,
+                )
+
+            if response.status_code in (200, 201):
+                logger.info(
+                    "Report email sent to %s via Resend (attempt %d), id=%s",
+                    to_email,
+                    attempt,
+                    response.json().get("id", "unknown"),
+                )
+                return True
+
+            # Non-2xx — log and retry
+            last_error = f"HTTP {response.status_code}: {response.text}"
+            logger.warning(
+                "Resend API error sending to %s (attempt %d/%d): %s",
+                to_email, attempt, MAX_RETRIES, last_error,
             )
-            logger.info("Report email sent to %s (attempt %d)", to_email, attempt)
-            return True
-        except aiosmtplib.SMTPException as e:
+
+        except httpx.TimeoutException as e:
             last_error = e
             logger.warning(
-                "SMTP error sending to %s (attempt %d/%d): %s",
+                "Timeout sending to %s (attempt %d/%d): %s",
                 to_email, attempt, MAX_RETRIES, e,
             )
         except Exception as e:
@@ -198,5 +217,8 @@ async def send_report_email(
                 to_email, attempt, MAX_RETRIES, e,
             )
 
-    logger.error("Failed to send report email to %s after %d attempts: %s", to_email, MAX_RETRIES, last_error)
+    logger.error(
+        "Failed to send report email to %s after %d attempts: %s",
+        to_email, MAX_RETRIES, last_error,
+    )
     return False

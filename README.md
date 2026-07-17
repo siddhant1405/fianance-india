@@ -81,7 +81,7 @@ docker compose up --build
 - **Multi-Asset Dashboard** - Unified view of equities, forex, indices, and commodities.
 - **Technical Indicator Engine** - Server-side computed SMA, EMA, RSI, MACD, Bollinger Bands, Volatility, and Momentum.
 - **AI-Powered Insights** - Llama 3.3 70B (via Groq) dynamically grounded in live computed metrics to provide hallucination-free technical analysis.
-- **Automated Daily Reports** - APScheduler and Gmail SMTP trigger user-personalized PDF reports containing Matplotlib sparkline charts of their watchlist assets.
+- **Automated Daily Reports** - APScheduler and Resend API deliver user-personalized PDF reports containing Matplotlib sparkline charts of their watchlist assets.
 - **Authentication & Watchlists** - JWT-secured personalized watchlists and user preferences.
 - **Multi-Layer Caching** - Redis used for hot price data, indicator caching, and LLM response caching to ensure ultra-low latency.
 
@@ -93,6 +93,22 @@ docker compose up --build
 | Backend | FastAPI, Python, APScheduler, Pydantic |
 | Database | PostgreSQL (persistent), Redis (cache) |
 | AI Engine | Groq Cloud (Llama 3.3 70B) |
-| PDF & Email | ReportLab, Matplotlib, aiosmtplib (Gmail SMTP) |
+| PDF & Email | ReportLab, Matplotlib, Resend API |
 | APIs | yfinance, Frankfurter API, ExchangeRate API |
 
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `REDIS_URL` | Redis connection string |
+| `GROQ_API_KEY` | Groq Cloud API key for AI insights |
+| `EXCHANGE_API_KEY` | ExchangeRate API key |
+| `RESEND_API_KEY` | Resend API key for email delivery |
+| `RESEND_FROM_EMAIL` | Sender address (e.g. `Finance India <reports@yourdomain.com>`) |
+
+> **Note on email delivery:** The app uses [Resend](https://resend.com) (HTTPS API) instead of Gmail SMTP.
+> Render's free tier blocks outbound SMTP ports (25, 465, 587); Resend resolves this by sending over port 443.
+> Sign up at resend.com for 3,000 free emails/month.
