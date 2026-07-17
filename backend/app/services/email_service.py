@@ -1,13 +1,15 @@
 """
 Email delivery service for Finance India daily watchlist PDF reports.
 
-Uses Resend's HTTP API (via httpx) for reliable email delivery on Render.
+Uses SendGrid's HTTP API (via httpx) for reliable email delivery on Render.
+SendGrid requires no custom domain — a single verified sender email is enough.
 SMTP port 587 is blocked on Render's free tier; this approach uses HTTPS
 (port 443) which is always allowed.
 
 Credentials are loaded from environment variables — never hardcoded.
 """
 
+import base64
 import logging
 import os
 from datetime import datetime
@@ -17,25 +19,25 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-# ── Resend API Configuration ─────────────────────────────────────────────────
-RESEND_API_URL = "https://api.resend.com/emails"
+# ── SendGrid API Configuration ───────────────────────────────────────────────
+SENDGRID_API_URL = "https://api.sendgrid.com/v3/mail/send"
 MAX_RETRIES = 2
 
 
-def _get_resend_credentials() -> tuple[str, str]:
+def _get_sendgrid_credentials() -> tuple[str, str]:
     """
-    Load Resend API key and sender address from environment variables.
+    Load SendGrid API key and verified sender address from environment variables.
 
     Raises:
         ValueError: If required env vars are not set.
     """
-    api_key = os.getenv("RESEND_API_KEY")
-    from_email = os.getenv("RESEND_FROM_EMAIL", "Finance India <reports@resend.dev>")
+    api_key = os.getenv("SENDGRID_API_KEY")
+    from_email = os.getenv("SENDGRID_FROM_EMAIL")
 
-    if not api_key:
+    if not api_key or not from_email:
         raise ValueError(
-            "RESEND_API_KEY must be set in environment variables. "
-            "Sign up at https://resend.com and create an API key."
+            "SENDGRID_API_KEY and SENDGRID_FROM_EMAIL must be set in environment variables. "
+            "Sign up at https://sendgrid.com and verify a sender email address."
         )
 
     return api_key, from_email
@@ -128,10 +130,11 @@ async def send_report_email(
     report_date: Optional[str] = None,
 ) -> bool:
     """
-    Send the daily watchlist report PDF via Resend's HTTP API.
+    Send the daily watchlist report PDF via SendGrid's HTTP API.
 
     Uses HTTPS (port 443) instead of SMTP (port 587), which is blocked
-    on Render's free tier.
+    on Render's free tier. No custom domain required — only a verified
+    sender email address.
 
     Args:
         to_email: Recipient email address.
@@ -146,29 +149,31 @@ async def send_report_email(
         report_date = datetime.now().strftime("%d %B %Y")
 
     try:
-        api_key, from_email = _get_resend_credentials()
+        api_key, from_email = _get_sendgrid_credentials()
     except ValueError:
-        logger.error("Resend credentials not configured — cannot send report email")
+        logger.error("SendGrid credentials not configured — cannot send report email")
         return False
 
-    # Estimate asset count from PDF size (rough heuristic for email body)
     asset_count_estimate = max(1, len(pdf_bytes) // 15000)
-
     html_body = _build_email_html(user_name, report_date, asset_count_estimate)
-
     filename = f"FinanceIndia_Report_{datetime.now().strftime('%Y-%m-%d')}.pdf"
 
-    # Resend API payload — attachments are base64-encoded
-    import base64
+    # SendGrid v3 mail/send payload
     payload = {
-        "from": from_email,
-        "to": [to_email],
+        "personalizations": [
+            {
+                "to": [{"email": to_email, "name": user_name}],
+            }
+        ],
+        "from": {"email": from_email, "name": "Finance India"},
         "subject": f"Finance India Daily Report — {report_date}",
-        "html": html_body,
+        "content": [{"type": "text/html", "value": html_body}],
         "attachments": [
             {
-                "filename": filename,
                 "content": base64.b64encode(pdf_bytes).decode("utf-8"),
+                "type": "application/pdf",
+                "filename": filename,
+                "disposition": "attachment",
             }
         ],
     }
@@ -183,24 +188,23 @@ async def send_report_email(
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
-                    RESEND_API_URL,
+                    SENDGRID_API_URL,
                     json=payload,
                     headers=headers,
                 )
 
-            if response.status_code in (200, 201):
+            # SendGrid returns 202 Accepted on success (no body)
+            if response.status_code == 202:
                 logger.info(
-                    "Report email sent to %s via Resend (attempt %d), id=%s",
+                    "Report email sent to %s via SendGrid (attempt %d)",
                     to_email,
                     attempt,
-                    response.json().get("id", "unknown"),
                 )
                 return True
 
-            # Non-2xx — log and retry
             last_error = f"HTTP {response.status_code}: {response.text}"
             logger.warning(
-                "Resend API error sending to %s (attempt %d/%d): %s",
+                "SendGrid API error sending to %s (attempt %d/%d): %s",
                 to_email, attempt, MAX_RETRIES, last_error,
             )
 

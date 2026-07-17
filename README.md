@@ -93,7 +93,7 @@ docker compose up --build
 | Backend | FastAPI, Python, APScheduler, Pydantic |
 | Database | PostgreSQL (persistent), Redis (cache) |
 | AI Engine | Groq Cloud (Llama 3.3 70B) |
-| PDF & Email | ReportLab, Matplotlib, Resend API |
+| PDF & Email | ReportLab, Matplotlib, SendGrid API |
 | APIs | yfinance, Frankfurter API, ExchangeRate API |
 
 ## Environment Variables
@@ -106,9 +106,10 @@ docker compose up --build
 | `REDIS_URL` | Redis connection string |
 | `GROQ_API_KEY` | Groq Cloud API key for AI insights |
 | `EXCHANGE_API_KEY` | ExchangeRate API key |
-| `RESEND_API_KEY` | Resend API key for email delivery |
-| `RESEND_FROM_EMAIL` | Sender address (e.g. `Finance India <reports@yourdomain.com>`) |
+| `SENDGRID_API_KEY` | SendGrid API key for email delivery |
+| `SENDGRID_FROM_EMAIL` | Verified sender address (e.g. `youremail@gmail.com`) |
 
-> **Note on email delivery:** The app uses [Resend](https://resend.com) (HTTPS API) instead of Gmail SMTP.
-> Render's free tier blocks outbound SMTP ports (25, 465, 587); Resend resolves this by sending over port 443.
-> Sign up at resend.com for 3,000 free emails/month.
+> **Note on email delivery:** The app uses [SendGrid](https://sendgrid.com) (HTTPS API) instead of Gmail SMTP.
+> Render's free tier blocks outbound SMTP ports (25, 465, 587); SendGrid resolves this by sending over port 443.
+> No custom domain required — just verify a single sender email in the SendGrid dashboard.
+> Sign up at sendgrid.com for 100 free emails/day.
